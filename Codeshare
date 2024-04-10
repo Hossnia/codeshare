@@ -2622,5 +2622,92 @@ for now what is done is to lunch an ec2 instance, install docker and docker comp
 after the demo. please go ahead a propose a better or more automated solution.
 32- what are the cons of terraform?
 
+%%%%%%%%%%%%%%%%%%% week12 d4
+
+provider "aws" {
+    region = "us-east-1"
+  
+}
+
+resource "aws_db_instance" "default" {
+  allocated_storage    = 10
+  db_name              = "mydb"
+  engine               = "mysql"
+  engine_version       = "5.7"
+  instance_class       = "db.t3.micro"
+  username             = "foo"
+  password             = "foobarbaz"
+  parameter_group_name = "default.mysql5.7"
+  skip_final_snapshot  = true
+  backup_retention_period = 0
+  identifier = "dev-database"
+
+}
+
+** rds module
+
+** main.tf
+provider "aws" {
+    region = var.region
+  
+}
+
+resource "aws_db_instance" "default" {
+  allocated_storage    = var.allocated_storage
+  db_name              = var.db_name
+  engine               = var.engine
+  engine_version       = var.engine_version
+  instance_class       = var.instance_class
+  username             = var.username
+  password             = var.password
+  parameter_group_name = var.parameter_group_name
+  skip_final_snapshot  = var.skip_final_snapshot
+  backup_retention_period = var.backup_retention_period
+  identifier = var.identifier
+}
+
+**variables.tf
+
+variable "allocated_storage" {
+ default = 10 
+}
+variable "backup_retention_period" {
+ description = "How long backup should be kept" 
+ default = 0
+}
+variable "db_name" {
+  description = "Name of the initial database"
+  default = "devdb"
+}
+variable "engine" {
+  default = "mysql"
+}
+variable "engine_version" {
+  default = "5.7"
+}
+variable "identifier" {
+ default = "dev-database" 
+}
+variable "password" {
+   sensitive = true 
+  
+}
+variable "username" {
+  sensitive = true
+}
+variable "instance_class" {
+ default =  "db.t3.micro" 
+}
+variable "region" {
+ default = "us-east-1"
+}
+variable "skip_final_snapshot" {
+ default = true 
+}
+variable "parameter_group_name" {
+ default = "default.mysql5.7" 
+}
+
+
 
 
